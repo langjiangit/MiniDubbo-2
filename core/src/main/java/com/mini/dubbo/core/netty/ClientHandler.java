@@ -9,6 +9,11 @@ import io.netty.util.ReferenceCountUtil;
 
 //用于读取客户端发来的信息
 public class ClientHandler extends ChannelInboundHandlerAdapter {
+    public StringBuffer resultMessage;
+
+    ClientHandler(StringBuffer sb){
+        resultMessage = sb;
+    }
 
     // 客户端与服务端，连接成功
     @Override
@@ -23,6 +28,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             throws Exception {
         try {
             Response response = (Response) msg;
+            resultMessage.append(response.body);
             System.out.println("客户端收到服务端的返回:"+response.body);
 
         } finally {

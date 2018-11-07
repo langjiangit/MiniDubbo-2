@@ -18,10 +18,15 @@ public class Main {
 
 
 
-        helloService.sayHello("spring");
-        helloService.sayHello("cloud");
+       //  helloService.sayHello("spring");
 
-        goodbyeService.sayByeBye("struts");
+       String str1 =  helloService.sayHello("cloud");
+        System.out.println("str="+str1);
+
+        String resp = goodbyeService.sayByeBye("struts");
+
+
+        System.out.println("resp="+resp);
 
     }
 }

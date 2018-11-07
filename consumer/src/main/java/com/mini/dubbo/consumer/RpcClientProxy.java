@@ -34,9 +34,10 @@ public class RpcClientProxy {
                          NettyClient nettyClient = new NettyClient();
                          String ip = url.split(":")[0];
                          String port = url.split(":")[1];
-                         nettyClient.send(Integer.parseInt(port),ip,request);
 
-                         return null;
+                         String respone = nettyClient.send(Integer.parseInt(port),ip,request);
+
+                         return respone;
                      }
                  });
 

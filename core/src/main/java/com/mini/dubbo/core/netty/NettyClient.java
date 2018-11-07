@@ -19,6 +19,8 @@ public class NettyClient {
 
     private ChannelFuture channelFuture;
 
+    private StringBuffer resultBuffer = new StringBuffer();
+
 
     /**
      * 连接服务器
@@ -27,7 +29,7 @@ public class NettyClient {
      * @param host
      * @throws Exception
      */
-    public void send(int port, String host,Request request) throws Exception {
+    public String send(int port, String host,Request request) throws Exception {
         // 配置客户端NIO线程组
         EventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -43,7 +45,22 @@ public class NettyClient {
 
             System.out.println("sendRequest:"+request.toString());
 
+           // channelFuture.channel().writeAndFlush(request).addListener();
+
+         //   先说实验结论就是ctx的writeAndFlush是从当前handler直接发出这个消息，
+         //   而channel的writeAndFlush是从整个pipline最后一个outhandler发出。
+         //   怎么样，是不是很抽象，下面画图来看一看：
             channelFuture.channel().writeAndFlush(request);
+
+            while(resultBuffer.length() == 0){
+                System.out.println("=================");
+
+                Thread.sleep(30);
+            }
+
+          //  System.out.println("after sendRequest:"+resultBuffer.toString());
+
+            return resultBuffer.toString();
 
             // 等待链接关闭
           //  channelFuture.channel().closeFuture().sync();
@@ -69,7 +86,7 @@ public class NettyClient {
             // 设置发送消息编码器
             ch.pipeline().addLast(new ObjectEncoder());
             // 处理网络IO
-            ch.pipeline().addLast(new ClientHandler());// 处理网络IO
+            ch.pipeline().addLast(new ClientHandler(resultBuffer));// 处理网络IO
         }
 
     }
